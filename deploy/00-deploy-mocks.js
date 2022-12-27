@@ -1,5 +1,7 @@
-const developementChains = require("../helper-hardhat-config")
-const BASE_FEE = ethers.utils.parseEther("0.25") //0.25 is the premium
+const { network } = require("hardhat")
+const BASE_FEE = "250000000000000000" // 0.25 is this the premium in LINK?
+
+//const BASE_FEE = ethers.utils.parseEther("0.25") //0.25 is the premium
 const GAS_PRICE_LINK = 1e9
 
 module.exports = async function ({ getNamedAccounts, deployments }) {
@@ -8,7 +10,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
     const chainId = network.config.chainId
     const args = [BASE_FEE, GAS_PRICE_LINK]
 
-    if (developementChains.includes(network.name)) {
+    if (chainId == 31337) {
         log("Local neteork detected!! Deploying mocks...")
         //deploy a mock vrfCoordinator
         // it takes uint96 _baseFee, uint96 _gasPriceLink
@@ -17,9 +19,14 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
             log: true,
             args: args,
         })
-        log("Mock deployed!")
-        log("-----------------------------------")
+        log("Mocks Deployed!")
+        log("----------------------------------------------------------")
+        log("You are deploying to a local network, you'll need a local network running to interact")
+        log(
+            "Please run `yarn hardhat console --network localhost` to interact with the deployed smart contracts!"
+        )
+        log("----------------------------------------------------------")
     }
 }
 
-module.exports.tags = [all, Mocks]
+module.exports.tags = ["all", "Mocks"]
